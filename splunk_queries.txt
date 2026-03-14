@@ -1,0 +1,23 @@
+source="ssh_logs_new.json"
+| host="LinuxServer" sourcetype="_json" count AS "Total SSH Events"
+
+source="ssh_logs_new.json"
+| host="LinuxServer" sourcetype="_json" event_type="Successful SSH Login"
+
+source="ssh_logs_new.json"
+| host="LinuxServer" sourcetype="_json" event_type="Failed SSH Login" auth_success=false
+
+source="ssh_logs_new.json"
+| host="LinuxServer" sourcetype="_json" event_type="Connection Without Authentication"
+
+source="ssh_logs_new.json" host="LinuxServer" sourcetype="_json" event_type="Multiple Failed Authentication Attempts" 
+| table id.orig_h
+| iplocation id.orig_h
+| stats count by Country
+| geom geo_countries featureIdField="Country"
+
+source="ssh_logs_new.json"
+| host="LinuxServer" sourcetype="_json" event_type="Failed SSH Login" | top username
+
+source="ssh_logs_new.json"
+| host="LinuxNew" sourcetype="_json" event_type="Failed SSH Login" | top username
